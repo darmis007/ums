@@ -1,0 +1,7 @@
+{% extends 'base.html'%}
+
+{% block content%}
+{% for date in dates_list%}
+<h3><a href={% url 'day_attendance' date.id %}>{{date.date_today}}</a></h3>
+{% endfor%}
+{% endblock%}

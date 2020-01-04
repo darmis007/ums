@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+{% block content%}
+
+<h2>Name:   {{volounteer.volounteer_name}}</h2>
+<h3>Year:   {{volounteer.volounteer_year}}</h3>
+<h3>Days Attended:  {{volounteer.present}}</h3>
+<ul>
+<h3>Dates Attended:</h3>
+{% for d in attendance%}
+<h4>{{d.date}}</h4>
+{% endfor %}
+{% ifequal volounteer.volounteer_name request.user.username%}
+<h2><a href={% url 'volounteer_edit' volounteer.id%}>Edit</a></h2>        
+{% endifequal%}
+{% endblock %}

@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>
+<h3>Utkarsh Management System</h3>
+</title>
+</head>
+<body>
+<form method="POST">
+    {% csrf_token %}
+                
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" required>               
+    <label for="password">Password</label>                
+    <input type="password" name="password" id="password" required>
+    <p font color='red'>{{error}}</p>
+    <button type="submit">Login</button>
+</body>
+</html>

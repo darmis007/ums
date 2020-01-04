@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content%}
+    <h2>{{date.subject}}</h2>
+    <h1>Students</h1><br>
+    <h1>{{ date.date_today }}</h1>
+    <br>
+    <ul>
+        {% for student in students %}
+            <li>{{ student.student_name }}  {{student.standard}}  </li>
+        {% endfor %}
+    </ul>
+{% endblock%}

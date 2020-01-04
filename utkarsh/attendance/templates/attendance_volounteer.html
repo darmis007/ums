@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<br>
+    <form method="POST">
+        {{ formset.management_form }}
+
+        {% csrf_token %}
+        {% for volounteer,form in list %}
+                <tr>
+                    <td>{{ volounteer.volounteer_name }}</td>
+                    <td class="align">
+                        {% for radio in form %}
+                            {{ radio }}
+                        {% endfor %}
+
+        {% endfor %}
+        <br>
+        <button type="submit" class="btn btn-success float-right">Done</button>
+    </form>
+{% endblock content %}
