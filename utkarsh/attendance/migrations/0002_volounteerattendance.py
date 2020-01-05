@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date', models.DateField()),
                 ('has_attended', models.CharField(choices=[('Present', 'Present'), ('Absent', 'Absent')], max_length=50)),
-                ('volounteer_name1', models.ForeignKey(on_delete='models.CASCADE', to='attendance.Volounteer')),
+                ('volounteer_name1', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='attendance.Volounteer')),
             ],
         ),
     ]
