@@ -4,6 +4,12 @@
 
 <h2>Name:   {{volounteer.volounteer_name}}</h2>
 <h3>Year:   {{volounteer.volounteer_year}}</h3>
+<h3>Mentor to</h3>
+<ul>
+{% for student in students%}
+<a href={% url 'student_details' student.id %}>{{student.name}} {{student.standard}} </a>
+{% endfor%}
+</ul>
 <ul>
 <h3>Dates Attended:</h3>
 {% for d in attendance%}

@@ -51,6 +51,7 @@ def volounteer_details(request,id):
     context['user']=User.username
     context['volounteer']=Volounteer.objects.get(id=id)
     context['attendance']=volounteerAttendance.objects.filter(volounteer_name1=Volounteer.objects.get(id=id),has_attended='Present')
+    context['students']=Student.objects.filter(mentor=Volounteer.objects.get(id=id))
     return render(request,'details_volounteer.html',context)    
 
 @login_required
