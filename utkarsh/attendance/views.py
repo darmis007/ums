@@ -19,7 +19,7 @@ def list_dates(request):
 def daywise_attendance(request,id):
     context={}
     context['date']=Date.objects.get(id=id)
-    context['students']=Attendance.objects.filter(date=Date.objects.get(id=id).date_today)
+    context['students']=Attendance.objects.filter(date=Date.objects.get(id=id).date_today,has_attended='Present')
     return render(request,'daywise.html',context)
 
 @login_required
