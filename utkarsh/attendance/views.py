@@ -92,7 +92,7 @@ def mark_attendance(request):
                     student.present = student.present + 1
                 student.save()
             context = {'students': students}
-            if Date.objects.get(date_today=date):
+            if Date.objects.filter(date_today=date):
                 pass
             else:
                 d3=Date()

@@ -18,4 +18,5 @@ urlpatterns = [
     path('volounteer/<int:id>/edit',views.volounteer_edit,name='volounteer_edit'),
     path('login/',views.user_login,name='login'),
     path('logout/',views.user_logout,name='logout'),
+    path('',views.user_login,name='mainpage'),
 ]
