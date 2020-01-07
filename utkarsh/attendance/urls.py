@@ -22,4 +22,5 @@ urlpatterns = [
     path('home/',views.home,name='home'),
     path('post/create',views.createPost,name='post'),
     path('post/details/<int:id>',views.post_details,name='post_details'),
+    path('student/details/<int:id>/delete',views.student_delete,name='student_delete')
 ]

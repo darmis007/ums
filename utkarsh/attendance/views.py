@@ -331,3 +331,11 @@ def post_details(request,id):
     context={}
     context['post']=Post.objects.get(id=id)
     return render(request,'post_details.html',context)
+
+def student_delete(request,id):
+    context={}
+    s1=Student.objects.get(id=id)
+    s1.delete()
+    context['students']=Student.objects.all()
+    return HttpResponseRedirect(reverse('student_list'))
+

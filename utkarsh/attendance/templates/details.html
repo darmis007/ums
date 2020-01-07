@@ -10,6 +10,8 @@
 {% for d in attendance%}
 <h4>{{d.date}}</h4>
 {% endfor %}
-        
+
+
+<h4><a href={% url 'student_delete' student.id%}>Delete</a></h4>
 
 {% endblock %}
