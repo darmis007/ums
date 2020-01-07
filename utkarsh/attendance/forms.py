@@ -67,3 +67,8 @@ class createPostForm(forms.Form):
     message=forms.CharField(max_length=100000,widget=forms.Textarea)
     class Meta:
         model=Post
+
+class commentForm(forms.Form):
+    message=forms.CharField(max_length=100000,widget=forms.Textarea)
+    class Meta:
+        model=Comment

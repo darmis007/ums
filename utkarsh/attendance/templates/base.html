@@ -6,6 +6,7 @@
 <body>
 <h3><a href={% url 'home'%}>Home</a> <a href={% url 'student_list' %}>index</a> <a href={% url 'add_student' %}>addStudent </a> <a href={% url 'list_dates'%}> datewiseattendance </a> <a href={% url 'mark_attendance'%}>takeattendance</a> <a href={% url 'volounteer_list'%}>volounteers</a> <a href={% url 'post'%}>Post</a></h3> 
 <h1> Utkarsh Management System</h1>
+<h2>Logged in as {{request.user.username}}</h2>
 <button type="submit"><a href={% url 'logout'%}>Logout</a></button>
 
 {% block content%}

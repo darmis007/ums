@@ -5,8 +5,7 @@
 <br>
     <form method="POST">
         {{ formset.management_form }}
-
-        {% csrf_token %}
+            {% csrf_token %}
         {% for volounteer,form in list %}
                 <tr>
                     <td>{{ volounteer.volounteer_name }}</td>

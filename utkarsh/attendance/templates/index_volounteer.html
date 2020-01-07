@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content%}
-    <h1>volounteers</h1>
+
+    <h1>Volounteers</h1>
     <ul>
         {% for volounteer in volounteers %}
-            <li><a href={% url 'volounteer_details' volounteer.id%}>{{ volounteer }}  {{volounteer.}}  </li>
+            <li><a href={% url 'volounteer_details' volounteer.id%}>{{ volounteer }}  {{volounteer.volounteer_year}}  </li>
         {% endfor %}
     </ul>
 {% endblock%}

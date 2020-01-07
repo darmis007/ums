@@ -150,7 +150,7 @@ def volounteer_mark_attendance(request):
             for form, volounteer in zip(formset,volounteers):
                 date = datetime.today()
                 mark = form.cleaned_data['has_attended']
-                check_attendance = volounteerAttendance.objects.filter(date=date,volounteer_name1=volounteer)
+                check_attendance = volounteerAttendance.objects.get(date=date,volounteer_name1=volounteer)
                 if check_attendance :
                     attendance = volounteerAttendance.objects.get(date=date,volounteer_name1=volounteer)
                     if attendance.has_attended == 'Absent':
@@ -173,7 +173,7 @@ def volounteer_mark_attendance(request):
                     volounteer.present = volounteer.present + 1
                 volounteer.save()
             context = {'volounteers': volounteers}
-            if Date.objects.get(date_today=date):
+            if Date.objects.filter(date_today=date):
                 pass
             else:
                 d3=Date()
@@ -310,6 +310,7 @@ def createPost(request):
             p1.title=form.cleaned_data['title']
             p1.message=form.cleaned_data['message']
             p1.posted_by=Volounteer.objects.get(volounteer_name=request.user.username)
+            p1.posted_on=datetime.datetime.now()
             p1.save()
             return render(request,'home.html',context)
 
@@ -330,6 +331,8 @@ def home(request):
 def post_details(request,id):
     context={}
     context['post']=Post.objects.get(id=id)
+    context['username']=Volounteer.objects.get(volounteer_name=request.user.username)
+    context['comments']=Comment.objects.filter(on_post=Post.objects.get(id=id))
     return render(request,'post_details.html',context)
 
 def student_delete(request,id):
@@ -339,3 +342,65 @@ def student_delete(request,id):
     context['students']=Student.objects.all()
     return HttpResponseRedirect(reverse('student_list'))
 
+def comment(request,id):
+    context={}
+    context['username']=request.user.username
+    context['comment_form']=commentForm()
+    if request.method=='POST':
+        form=commentForm(request.POST)
+        if form.is_valid():
+            p1=Comment()
+            p1.comment_by=Volounteer.objects.get(volounteer_name=request.user.username)
+            p1.my_comment=form.cleaned_data['message']
+            p1.on_post=Post.objects.get(id=id)
+            p1.on_date=datetime.datetime.now()
+            p1.save()
+            return HttpResponseRedirect(reverse('post_details',args=[id]))
+
+        else:
+            context['message']='Something went wrong'
+            return render(request,'comment.html',context)
+    else:
+        return render(request,'comment.html',context)
+    
+    return render(request,'comment.html',context)
+
+def edit_post(request,id):
+    context={}
+    context['post']=Post.objects.get(id=id)
+    context['post_form']=createPostForm()
+    if request.method=='POST':
+        form=createPostForm(request.POST)
+        if form.is_valid():
+            p1=Post.objects.get(id=id)
+            p1.title=form.cleaned_data['title']
+            p1.message=form.cleaned_data['message']
+            p1.save()
+            return HttpResponseRedirect(reverse('post_details',args=[id]))
+
+        else:
+            context['message']='Something went wrong'
+            return render(request,'post.html',context)
+    else:
+        return render(request,'post.html',context)
+    
+    return render(request,'post.html',context)
+
+def edit_comment(request,id,id1):
+    context={}
+    context['comment_form']=commentForm()
+    if request.method=='POST':
+        form=commentForm(request.POST)
+        if form.is_valid():
+            p1=Comment.objects.get(id=id1)
+            p1.my_comment=form.cleaned_data['message']
+            p1.save()
+            return HttpResponseRedirect(reverse('post_details',args=[id]))
+
+        else:
+            context['message']='Something went wrong'
+            return render(request,'comment.html',context)
+    else:
+        return render(request,'comment.html',context)
+    
+    return render(request,'comment.html',context)

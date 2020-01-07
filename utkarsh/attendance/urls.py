@@ -22,5 +22,9 @@ urlpatterns = [
     path('home/',views.home,name='home'),
     path('post/create',views.createPost,name='post'),
     path('post/details/<int:id>',views.post_details,name='post_details'),
-    path('student/details/<int:id>/delete',views.student_delete,name='student_delete')
+    path('post/details/<int:id>/edit',views.edit_post,name='post_edit'),
+    path('student/details/<int:id>/delete',views.student_delete,name='student_delete'),
+    path('post/details/<int:id>/comment',views.comment,name='comment'),
+    path('post/details/<int:id>/comment/<int:id1>/edit',views.edit_comment,name='comment_edit'),
+
 ]

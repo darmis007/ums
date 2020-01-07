@@ -85,13 +85,14 @@ class Post(models.Model):
     title=models.CharField(max_length=100,blank=True,null=True)
     message=models.TextField(max_length=100000)
     posted_by=models.ForeignKey(Volounteer,on_delete=models.CASCADE,null=True,blank=True)
-    posted_on=models.DateTimeField(auto_now=True)
+    posted_on=models.DateTimeField()
     likes=models.PositiveIntegerField(default=0)
 
 class Comment(models.Model):
-    comment_by=models.ForeignKey(Volounteer,on_delete=models.CASCADE)
+    comment_by=models.ForeignKey(Volounteer,on_delete=models.CASCADE,null=True,blank=True)
     my_comment=models.TextField(max_length=100000)
-    on_post=models.ForeignKey(Post,on_delete=models.CASCADE)
+    on_date=models.DateTimeField()
+    on_post=models.ForeignKey(Post,on_delete=models.CASCADE,null=True,blank=True)
 
 
 

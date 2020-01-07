@@ -2,6 +2,6 @@
 
 {% block content%}
 {% for post in posts%}
-<h3><a href={% url 'post_details' post.id %}>{{post.title}} </a></h3>
+<h3><a href={% url 'post_details' post.id %}>{{post.title}}</a></h3> <h4> by {{post.posted_by}}</h4>
 {% endfor%}
 {% endblock%}

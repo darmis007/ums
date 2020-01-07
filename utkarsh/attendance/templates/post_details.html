@@ -2,6 +2,20 @@
 
 {% block content%}
 <h2>{{post.title}}</h2>
-<h3>{{post.posted_on}}   {{post.posted_by}}</h3>
-<h3>{{post.message}}</h3>
+<h5>{{post.posted_on}}   {{post.posted_by}}</h5>
+<h2>{{post.message}}</h2>
+{% ifequal post.posted_by username %}
+<h5><a href={% url 'post_edit' post.id%}>Edit my Post</a></h5>
+{% endifequal%}
+
+<h3><a href={% url 'comment' post.id%}>Comment</a></h3>
+{% for comment in comments%}
+<h5>{{comment.comment_by}} {{comment.on_date}}</h5>
+<h4>{{comment.my_comment}}</h4>
+{% ifequal comment.comment_by username %}
+<h5><a href={% url 'comment_edit' post.id comment.id%}>Edit my Comment</a></h5>
+{% endifequal %}
+<br>
+{% endfor%}
+
 {% endblock%}
