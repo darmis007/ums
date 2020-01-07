@@ -298,4 +298,36 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
 
+@login_required
+def createPost(request):
+    context={}
+    context['posts']=Post.objects.all()
+    context['post_form']=createPostForm()
+    if request.method=='POST':
+        form=createPostForm(request.POST)
+        if form.is_valid():
+            p1=Post()
+            p1.title=form.cleaned_data['title']
+            p1.message=form.cleaned_data['message']
+            p1.posted_by=Volounteer.objects.get(volounteer_name=request.user.username)
+            p1.save()
+            return render(request,'home.html',context)
 
+        else:
+            context['message']='Something went wrong'
+            return render(request,'post.html',context)
+    else:
+        return render(request,'post.html',context)
+    
+    return render(request,'post.html',context)
+
+@login_required
+def home(request):
+    context={}
+    context['posts']=Post.objects.all()
+    return render(request,'home.html',context)
+
+def post_details(request,id):
+    context={}
+    context['post']=Post.objects.get(id=id)
+    return render(request,'post_details.html',context)

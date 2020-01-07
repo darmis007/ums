@@ -81,6 +81,19 @@ class Date(models.Model):
     date_today=models.DateField()
     subject=models.CharField(choices=subject_choices,max_length=20,default='Maths')
 
+class Post(models.Model):
+    title=models.CharField(max_length=100,blank=True,null=True)
+    message=models.TextField(max_length=100000)
+    posted_by=models.ForeignKey(Volounteer,on_delete=models.CASCADE,null=True,blank=True)
+    posted_on=models.DateTimeField(auto_now=True)
+    likes=models.PositiveIntegerField(default=0)
+
+class Comment(models.Model):
+    comment_by=models.ForeignKey(Volounteer,on_delete=models.CASCADE)
+    my_comment=models.TextField(max_length=100000)
+    on_post=models.ForeignKey(Post,on_delete=models.CASCADE)
+
+
 
     
     

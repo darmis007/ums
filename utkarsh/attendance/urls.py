@@ -19,4 +19,7 @@ urlpatterns = [
     path('login/',views.user_login,name='login'),
     path('logout/',views.user_logout,name='logout'),
     path('',views.user_login,name='mainpage'),
+    path('home/',views.home,name='home'),
+    path('post/create',views.createPost,name='post'),
+    path('post/details/<int:id>',views.post_details,name='post_details'),
 ]
