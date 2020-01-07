@@ -328,6 +328,7 @@ def home(request):
     context['posts']=Post.objects.all()
     return render(request,'home.html',context)
 
+@login_required
 def post_details(request,id):
     context={}
     context['post']=Post.objects.get(id=id)
@@ -335,6 +336,7 @@ def post_details(request,id):
     context['comments']=Comment.objects.filter(on_post=Post.objects.get(id=id))
     return render(request,'post_details.html',context)
 
+@login_required
 def student_delete(request,id):
     context={}
     s1=Student.objects.get(id=id)
@@ -342,6 +344,7 @@ def student_delete(request,id):
     context['students']=Student.objects.all()
     return HttpResponseRedirect(reverse('student_list'))
 
+@login_required
 def comment(request,id):
     context={}
     context['username']=request.user.username
@@ -365,6 +368,7 @@ def comment(request,id):
     
     return render(request,'comment.html',context)
 
+@login_required
 def edit_post(request,id):
     context={}
     context['post']=Post.objects.get(id=id)
@@ -386,6 +390,7 @@ def edit_post(request,id):
     
     return render(request,'post.html',context)
 
+@login_required
 def edit_comment(request,id,id1):
     context={}
     context['comment_form']=commentForm()
