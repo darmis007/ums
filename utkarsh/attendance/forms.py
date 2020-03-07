@@ -10,6 +10,8 @@ class_attendance = (
     ('Absent','Absent'),
 )
 subject_choices=(('Maths','Maths'),('Science','Science'),('English','English'))
+
+visit_choices=(('Green','Green'),('Red','Red'),('Need Discussion','Need Discussion'),('Another Visit','Another Visit'))
 year_choices = (
         ('I','I'),
     ('II','II'),
@@ -72,3 +74,34 @@ class commentForm(forms.Form):
     message=forms.CharField(max_length=100000,widget=forms.Textarea)
     class Meta:
         model=Comment
+
+class backgroundVisitForm(forms.ModelForm):
+    class Meta:
+        model=Visit
+        fields=['visit_lead','visit_with','visit_student','visit_comments','visit_outcome']
+
+class editVisitForm(forms.ModelForm):
+    comment=forms.CharField(widget=forms.Textarea,max_length=3000)
+    outcome=forms.ChoiceField(choices=visit_choices)
+
+    class Meta:
+        model=Visit
+        fields=['visit_lead']
+
+class addSchoolForm(forms.ModelForm):
+    class Meta:
+        model=School
+        fields=['school_name','school_contact','school_address']
+
+class finalDiscussionForm(forms.ModelForm):
+    outcome=forms.ChoiceField(choices=visit_choices)
+    final=forms.IntegerField()
+    class Meta:
+        model=Visit
+        fields=['visit_outcome','visit_final']
+
+class addUniversalStudentForm(forms.ModelForm):
+
+    class Meta:
+        model=Student
+        fields=['name','standard','address','contact','school','gender','fees','lead','purpose']

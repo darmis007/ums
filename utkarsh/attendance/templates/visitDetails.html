@@ -1,0 +1,19 @@
+{% extends 'basevisit.html'%}
+
+{% block content%}
+
+{{visit.visit_lead}}
+{{visit.visit_on}}
+{{visit.visit_with}}
+{{visit.visit_student.name}}
+{{visit.visit_comments}}
+{{visit.visit_outcome}}
+
+ <form method="POST">
+        {% csrf_token %}
+        {{finalDiscussion_form}}
+        <br>
+        <button type="submit" class="btn btn-success float-right">Done</button>
+    </form>
+
+{% endblock%}

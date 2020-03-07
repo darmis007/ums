@@ -121,6 +121,72 @@ def mark_attendance(request):
 
     return render(request,'attendance.html', context)
 
+def mark_school_class_attendance(request,id,id1):
+    context={}
+    students=Student.objects.filter(school=School.objects.get(id=id),standard=id1,purpose='Attendance')
+    count = students.count()
+    context = {'students': students}
+    attendance_formset = formset_factory(AttendanceForm, extra=count)
+    date = datetime.today().date().strftime('%d-%m-%Y')
+    if request.method == 'POST':
+        formset = attendance_formset(request.POST)
+        list = zip(students,formset)
+        context['list']=list
+        if formset.is_valid():
+            for form, student in zip(formset,students):
+                date = datetime.today()
+                mark = form.cleaned_data['has_attended']
+                check_attendance = Attendance.objects.filter(date=date,student_name=student)
+                if check_attendance :
+                    attendance = Attendance.objects.get(date=date,student_name=student)
+                    if attendance.has_attended == 'Absent':
+                        student.absent = student.absent - 1
+                    elif attendance.has_attended == 'Present':
+                        student.present = student.present - 1
+                    attendance.has_attended = mark
+                    attendance.save()
+                
+                else: 
+                    attendance = Attendance()
+                    attendance.student_name = student
+                    attendance.date = date
+                    attendance.has_attended = mark
+                    attendance.save()
+
+                if mark == 'Absent':
+                    student.absent = student.absent + 1
+                if mark == 'Present':
+                    student.present = student.present + 1
+                student.save()
+            context = {'students': students}
+            if Date.objects.filter(date_today=date):
+                pass
+            else:
+                d3=Date()
+                d3.date_today=date
+                d3.save()
+            return render(request,'index.html' ,context)
+        else:
+            error = "Something went wrong"
+            context = {
+                'error': error,
+                'formset': formset,
+                'students': students,
+                'date':date,
+                }
+            return render(request, 'attendance.html', context)
+
+    else:
+        list = zip(students, attendance_formset())
+        context = {
+            'formset': attendance_formset(),
+            'students': students,
+            'list': list,
+            'date':date,
+            }
+
+    return render(request,'attendance.html', context)
+
 @login_required
 def student_list(request):
     context={}
@@ -134,72 +200,7 @@ def volounteer_list(request):
     return render(request,'index_volounteer.html',context)
 
 
-@login_required
-def volounteer_mark_attendance(request):
-    context={}
-    volounteers=Volounteer.objects.all()
-    count = volounteers.count()
-    context = {'volounteers': volounteers}
-    attendance_formset = formset_factory(AttendanceForm, extra=count)
-    date = datetime.today().date().strftime('%d-%m-%Y')
-    if request.method == 'POST':
-        formset = attendance_formset(request.POST)
-        list = zip(volounteers,formset)
-        context['list']=list
-        if formset.is_valid():
-            for form, volounteer in zip(formset,volounteers):
-                date = datetime.today()
-                mark = form.cleaned_data['has_attended']
-                check_attendance = volounteerAttendance.objects.get(date=date,volounteer_name1=volounteer)
-                if check_attendance :
-                    attendance = volounteerAttendance.objects.get(date=date,volounteer_name1=volounteer)
-                    if attendance.has_attended == 'Absent':
-                        volounteer.absent = volounteer.absent - 1
-                    elif attendance.has_attended == 'Present':
-                        volounteer.present = volounteer.present - 1
-                    attendance.has_attended = mark
-                    attendance.save()
-                
-                else: 
-                    attendance = volounteerAttendance()
-                    attendance.volounteer_name1 = volounteer
-                    attendance.date = date
-                    attendance.has_attended = mark
-                    attendance.save()
 
-                if mark == 'Absent':
-                    volounteer.absent = volounteer.absent + 1
-                if mark == 'Present':
-                    volounteer.present = volounteer.present + 1
-                volounteer.save()
-            context = {'volounteers': volounteers}
-            if Date.objects.filter(date_today=date):
-                pass
-            else:
-                d3=Date()
-                d3.date_today=date
-                d3.save()
-            return render(request,'index_volounteer.html' ,context)
-        else:
-            error = "Something went wrong"
-            context = {
-                'error': error,
-                'formset': formset,
-                'volounteers': volounteers,
-                'date':date,
-                }
-            return render(request, 'attendance_volounteer.html', context)
-
-    else:
-        list = zip(volounteers, attendance_formset())
-        context = {
-            'formset': attendance_formset(),
-            'volounteers': volounteers,
-            'list': list,
-            'date':date,
-            }
-
-    return render(request,'attendance_volounteer.html', context)
 
 
 @login_required
@@ -310,7 +311,7 @@ def createPost(request):
             p1.title=form.cleaned_data['title']
             p1.message=form.cleaned_data['message']
             p1.posted_by=Volounteer.objects.get(volounteer_name=request.user.username)
-            p1.posted_on=datetime.datetime.now()
+            p1.posted_on=datetime.now()
             p1.save()
             return render(request,'home.html',context)
 
@@ -356,7 +357,7 @@ def comment(request,id):
             p1.comment_by=Volounteer.objects.get(volounteer_name=request.user.username)
             p1.my_comment=form.cleaned_data['message']
             p1.on_post=Post.objects.get(id=id)
-            p1.on_date=datetime.datetime.now()
+            p1.on_date=datetime.now()
             p1.save()
             return HttpResponseRedirect(reverse('post_details',args=[id]))
 
@@ -409,3 +410,115 @@ def edit_comment(request,id,id1):
         return render(request,'comment.html',context)
     
     return render(request,'comment.html',context)
+
+def myvisits(request):
+    context={}
+    context['visits']=Student.objects.filter(purpose='Visit')
+    return render(request,'myvisits.html',context)
+
+@login_required
+def visitInfo(request):
+    context={}
+    context['backgroundvisit_form']=backgroundVisitForm()
+    if request.method=='POST':
+        form=backgroundVisitForm(request.POST)
+        if form.is_valid():
+            form.visit_on=datetime.now()
+            form.save()
+            return render(request,'myvisits.html',context)
+    return render(request,'visit.html',context)
+
+def useWindow(request):
+    context={}
+    return render(request,'usewindow.html',context)
+
+def addUniversalStudent(request):
+    context={}
+    context['addUniversalStudent_form']=addUniversalStudentForm()
+    if request.method=='POST':
+        form=addUniversalStudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('addUniversalStudent'))
+        else:
+            context['error']='Something went wrong'
+            return render(request,'add_universal_student.html',context)
+    return render(request,'universal_student.html',context)
+
+def addSchool(request):
+    context={}
+    context['addSchool_form']=addSchoolForm()
+    if request.method=='POST':
+        form=addSchoolForm(request.POST)
+        if form.is_valid:
+            form.save()
+            return HttpResponseRedirect(reverse('addSchool'))
+        else:
+            context['error']='Something went wrong'
+            return render(request,'addSchool.html',context)
+    return render(request,'addSchool.html',context)
+
+def viewSchool(request,id):
+    context={}
+    context['school']=School.objects.get(id=id)
+    students=Student.objects.filter(school=School.objects.get(id=id),purpose='Attendance')
+    standards=[]
+    for student in students:
+        if student.standard not in standards:
+            standards.append(student.standard)
+    context['standards']=standards
+    return render(request,'viewSchool.html',context)
+
+
+def allSchool(request):
+    context={}
+    context['schools']=School.objects.all()
+    return render(request,'schoolList.html',context)
+
+def useWindow(request):
+    context={}
+    return render(request,'usewindow.html',context)
+
+def visitList(request):
+    context={}
+    context['visits']=Visit.objects.filter(visit_discussion='Not Discussed')
+    return(request,'visit_list.html',context)
+
+def visitDetails(request,id):
+    visit=Visit.objects.get(id=id)
+    context={}
+    context['visit']=visit
+    context['finalDiscussion_form']=finalDiscussionForm()
+    if request.method=='POST':
+        form=finalDisscussionForm(request.POST)
+        if form.is_valid:
+            visit.visit_outcome=form.cleaned_data['outcome']
+            visit.visit_final=form.cleaned_data['final']
+            visit.visit_discussion='Discussed'
+            visit.save()
+            return HttpResponseRedirect(reverse('visitList'))
+        else:
+            context['error']='Something Went Wrong'
+            return render(request,'visitDetails.html',context)
+    return render(request,'visitDetails.html',context)
+
+def editVisit(request,id):
+    visit=Visit.objects.get(id=id)
+    context={}
+    context['editVisit_form']=editVisitForm()
+    if request.method=='POST':
+        form=editVisitForm(request.POST)
+        if form.is_valid:
+            visit.visit_outcome=form.cleaned_data['outcome']
+            visit.visit_comments=form.cleaned_data['comment']
+            visit.save()
+            return HttpResponseRedirect(reverse('visitDetails',args=[id]))
+        else:
+            context['error']='Something went wrong'
+            return render(request,'editVisit.html',context)
+    return render(request,'editVisit.html',context)
+
+
+
+
+            

@@ -1,0 +1,11 @@
+way2sms.py
+sms.py
+*.vscode
+*.pyc
+*.swp
+*.save
+*.fuse_hidden*
+*keyconfig*
+*.sqlite3
+*.xlsx
+__pycache__

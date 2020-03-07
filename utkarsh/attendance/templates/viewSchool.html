@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>
+Utkarsh Management System
+</title>
+</head>
+<body>
+<h2>Utkarsh Management System</h2>
+<h3>School Name:{{school.school_name}}</h3><br>
+<h3>School Address:{{school.school_address}}</h3><br>
+<h3>School Contact:{{school.school_contact}}</h3><br>
+<br>
+<h2>Take Attendance</h2>
+{% for standard in standards%}
+<h2><a href={% url 'mark_school_class' school.id standard %}>{{standard}}</a></h2>
+{% endfor%}
+
+
+</body>
+</html>
